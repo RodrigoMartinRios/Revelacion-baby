@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Revelación de Género</title>
+
+  <!-- Estilos -->
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #b1c7f0, #ed77f1);
+      color: #333;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      pointer-events: auto;
+    }
+    h1 {
+      margin-top: 20px;
+      font-size: clamp(24px, 5vw, 36px);
+    }
+    p {
+      font-size: clamp(16px, 4vw, 18px);
+      margin: 15px auto;
+      max-width: 90%;
+    }
+    input, button {
+      padding: 15px 20px;
+      margin: 10px;
+      font-size: clamp(16px, 4vw, 18px);
+      border-radius: 12px;
+      border: none;
+      min-height: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    input {
+      width: 90%;
+      max-width: 400px;
+      min-width: 200px;
+      text-align: center;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+      box-sizing: border-box;
+    }
+    button {
+      min-width: 120px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .selected {
+      background-color: #4caf50 !important;
+      color: white;
+      transform: scale(1.05);
+    }
+    #btnAgitar {
+      background-color: #ff6b6b;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    #result {
+      font-size: clamp(18px, 5vw, 24px);
+      margin-top: 30px;
+      font-weight: bold;
+      max-width: 90%;
+      margin: 30px auto;
+    }
+    #instruccion {
+      font-weight: bold;
+      font-size: clamp(16px, 4vw, 18px);
+      color: #2c3e50;
+      margin: 20px auto;
+      max-width: 90%;
+    }
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    /* Marca registrada */
+    .marca-registrada {
+      position: fixed;
+      bottom: 10px;
+      right: 15px;
+      font-size: 12px;
+      color: rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.8);
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 99999;
+    }
+    
+    /* Estilos para móviles */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      input, button {
+        width: 85%;
+        max-width: 320px;
+        min-width: 180px;
+        margin: 8px auto;
+        display: block;
+      }
+      .button-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      h1 {
+        margin-top: 10px;
+      }
+      .marca-registrada {
+        bottom: 5px;
+        right: 10px;
+        font-size: 10px;
+        padding: 3px 8px;
+      }
+    }
+    
+    /* Estilos para pantallas muy pequeñas */
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      input, button {
+        width: 95%;
+        max-width: 280px;
+        min-width: 150px;
+        padding: 12px 15px;
+        margin: 8px auto;
+        display: block;
+      }
+    }
+
+    /* Ocultar scrollbars para evitar inspección */
+    ::-webkit-scrollbar {
+      width: 0px;
+      background: transparent;
+    }
+  </style>
+
+  <!-- Confetti azul -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <h1>🎉 Adiviná el género del bebé 👶</h1>
+  <p>Ingresá tu nombre real y elegí una opción. Luego agitá tu teléfono 📱</p>
+
+  <input type="text" id="nombre" placeholder="Tu nombre real" required />
+
+  <div class="button-container">
+    <button id="btnNino">👦 Niño</button>
+    <button id="btnNina">👧 Niña</button>
+  </div>
+
+  <button id="btnAgitar" style="display:none;">📱 Simular Agitado</button>
+
+  <p id="instruccion" style="font-weight:bold;"></p>
+  <p id="result"></p>
+
+  <!-- Marca registrada -->
+  <div class="marca-registrada">© Rodri R.™</div>
+
+  <script>
+    // Medidas de seguridad avanzadas
+    (function() {
+      'use strict';
+      
+      // Limpiar consola constantemente
+      const _0x1a2b = setInterval(() => {
+        console.clear();
+        console.log('%c⚠️ ACCESO RESTRINGIDO ⚠️\n\n🚫 Este código está protegido por derechos de autor.\n📜 Propiedad de Rodri R.™\n⚖️ Uso no autorizado está prohibido.\n\n💡 Si necesitas algo similar, contacta al autor.', 'color:#ff0000;font-size:16px;font-weight:bold;');
+      }, 1000);
+
+      // Detectar herramientas de desarrollo
+      let _0x2b3c = false;
+      const _0x3c4d = () => {
+        const _0x4d5e = performance.now();
+        debugger;
+        const _0x5e6f = performance.now();
+        if (_0x5e6f - _0x4d5e > 100) {
+          if (!_0x2b3c) {
+            _0x2b3c = true;
+            alert('🚫 Acceso denegado - Herramientas de desarrollador detectadas\n\n© Rodri R.™ - Todos los derechos reservados');
+            window.location.href = 'about:blank';
+          }
+        }
+      };
+      setInterval(_0x3c4d, 2000);
+
+      // Deshabilitar teclas de desarrollador
+      document.addEventListener('keydown', function(_0x6f7g) {
+        // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+A, Ctrl+C, Ctrl+V
+        if (_0x6f7g.keyCode === 123 || 
+            (_0x6f7g.ctrlKey && _0x6f7g.shiftKey && (_0x6f7g.keyCode === 73 || _0x6f7g.keyCode === 74)) ||
+            (_0x6f7g.ctrlKey && (_0x6f7g.keyCode === 85 || _0x6f7g.keyCode === 83 || _0x6f7g.keyCode === 65 || _0x6f7g.keyCode === 67 || _0x6f7g.keyCode === 86))) {
+          _0x6f7g.preventDefault();
+          _0x6f7g.stopPropagation();
+          alert('🚫 Función deshabilitada\n\n© Rodri R.™');
+          return false;
+        }
+      });
+
+      // Deshabilitar click derecho
+      document.addEventListener('contextmenu', function(_0x7g8h) {
+        _0x7g8h.preventDefault();
+        alert('🚫 Click derecho deshabilitado\n\n© Rodri R.™');
+        return false;
+      });
+
+      // Detectar si se está viendo el código fuente
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          setTimeout(() => {
+            if (document.hidden) {
+              console.clear();
+            }
+          }, 1000);
+        }
+      });
+
+      // Protección adicional contra inspección
+      const _0x8h9i = new Image();
+      _0x8h9i.onerror = function() {
+        console.clear();
+      };
+      setInterval(() => {
+        _0x8h9i.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+      }, 3000);
+
+    })();
+
+    // Variables ofuscadas
+    let _0x9i0j = null;
+    let _0xa0b1 = false;
+    const _0xb1c2 = document.getElementById('nombre');
+    const _0xc2d3 = document.getElementById('result');
+    const _0xd3e4 = document.getElementById('instruccion');
+
+    const _0xe4f5 = "niño"; // ✅ Cambiar aquí si el resultado es niña
+
+    // Botones de selección (ofuscados)
+    document.getElementById('btnNino').onclick = () => {
+      _0x9i0j = "niño";
+      _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
+      _0xf5g6("btnNino", "btnNina");
+      _0xg6h7();
+    };
+
+    document.getElementById('btnNina').onclick = () => {
+      _0x9i0j = "niña";
+      _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
+      _0xf5g6("btnNina", "btnNino");
+      _0xg6h7();
+    };
+
+    // Botón para simular agitado
+    document.getElementById('btnAgitar').onclick = () => {
+      if (_0x9i0j && !_0xa0b1) {
+        _0xh7i8();
+      }
+    };
+
+    // Marcar botón activo (función ofuscada)
+    function _0xf5g6(_0xi8j9, _0xj9k0) {
+      document.getElementById(_0xi8j9).classList.add("selected");
+      document.getElementById(_0xj9k0).classList.remove("selected");
+    }
+
+    // Mostrar botón de agitar (función ofuscada)
+    function _0xg6h7() {
+      document.getElementById('btnAgitar').style.display = 'inline-block';
+    }
+
+    // Detectar sacudida (ofuscado)
+    let _0xk0l1 = new Date().getTime();
+    window.addEventListener("devicemotion", (_0xl1m2) => {
+      if (!_0x9i0j || _0xa0b1) return;
+
+      const _0xm2n3 = _0xl1m2.accelerationIncludingGravity;
+      const _0xn3o4 = Math.abs(_0xm2n3.x) + Math.abs(_0xm2n3.y) + Math.abs(_0xm2n3.z);
+
+      const _0xo4p5 = new Date().getTime();
+      if (_0xn3o4 > 25 && _0xo4p5 - _0xk0l1 > 1500) {
+        _0xk0l1 = _0xo4p5;
+        _0xh7i8();
+      }
+    });
+
+    // Enviar voto al servidor (función principal ofuscada)
+    function _0xh7i8() {
+      const _0xp5q6 = _0xb1c2.value.trim();
+
+      if (!_0xp5q6) {
+        _0xc2d3.innerText = "❌ Por favor ingresá tu nombre real.";
+        _0xa0b1 = false;
+        return;
+      }
+
+      if (!_0x9i0j) {
+        _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
+        _0xa0b1 = false;
+        return;
+      }
+
+      _0xa0b1 = true;
+      _0xd3e4.innerText = "⏳ Procesando tu voto...";
+      _0xc2d3.innerText = "";
+
+      const _0xq6r7 = _0x9i0j === _0xe4f5 ? "sí" : "no";
+
+      // 🔽 PEGÁ AQUÍ TU URL DEL SCRIPT DE GOOGLE APPS ENTRE COMILLAS
+      const _0xr7s8 = "PEGÁ_AQUÍ_TU_URL_DEL_SCRIPT";
+
+      // Verificar si la URL está configurada
+      if (_0xr7s8 === "PEGÁ_AQUÍ_TU_URL_DEL_SCRIPT") {
+        console.warn("URL del script no configurada");
+        setTimeout(() => {
+          if (_0xq6r7 === "sí") {
+            _0xs8t9();
+            _0xt9u0();
+            _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
+          } else {
+            _0xu0v1();
+            _0xc2d3.innerText = "";
+          }
+          _0xd3e4.innerText = "✅ ¡Listo! Gracias por participar";
+        }, 1500);
+        return;
+      }
+
+      const _0xv1w2 = new FormData();
+      _0xv1w2.append("nombre", _0xp5q6);
+      _0xv1w2.append("opcion", _0x9i0j);
+      _0xv1w2.append("acierto", _0xq6r7);
+
+      const _0xw2x3 = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout')), 10000)
+      );
+
+      Promise.race([
+        fetch(_0xr7s8, {
+          method: "POST",
+          body: _0xv1w2,
+          mode: 'cors'
+        }),
+        _0xw2x3
+      ])
+      .then(_0xx3y4 => {
+        if (!_0xx3y4.ok) {
+          throw new Error(`HTTP ${_0xx3y4.status}: ${_0xx3y4.statusText}`);
+        }
+        return _0xx3y4.text();
+      })
+      .then(_0xy4z5 => {
+        if (_0xy4z5 === "duplicado") {
+          _0xc2d3.innerText = "❌ Ya registraste tu voto, ¡gracias!";
+          _0xd3e4.innerText = "🚫 Voto duplicado";
+        } else {
+          if (_0xq6r7 === "sí") {
+            _0xs8t9();
+            _0xt9u0();
+            _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
+          } else {
+            _0xu0v1();
+            _0xc2d3.innerText = "";
+          }
+          _0xd3e4.innerText = "✅ ¡Voto registrado exitosamente!";
+        }
+      })
+      .catch(_0xz5a6 => {
+        console.error("Error completo:", _0xz5a6);
+        _0xa0b1 = false;
+        
+        if (_0xz5a6.message === 'Timeout') {
+          _0xc2d3.innerText = "⏰ Tiempo agotado. Verificá tu conexión e intentá de nuevo.";
+        } else if (_0xz5a6.message.includes('NetworkError') || _0xz5a6.message.includes('Failed to fetch')) {
+          _0xc2d3.innerText = "🌐 Sin conexión. Verificá tu internet e intentá de nuevo.";
+        } else {
+          _0xc2d3.innerText = "❌ Error al registrar. Intentá de nuevo en unos segundos.";
+        }
+        
+        _0xd3e4.innerText = "🔄 Podés intentar nuevamente";
+        
+        setTimeout(() => {
+          if (!_0xa0b1) {
+            _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
+            _0xc2d3.innerText = "";
+          }
+        }, 3000);
+      });
+    }
+
+    // 💨 Humo azul continuo y orgánico (función ofuscada)
+    function _0xs8t9() {
+      const _0xa6b7 = () => {
+        for (let _0xb7c8 = 0; _0xb7c8 < 6; _0xb7c8++) {
+          setTimeout(() => {
+            const _0xc8d9 = document.createElement('div');
+            
+            const _0xd9e0 = Math.random() * 60 + 80;
+            const _0xe0f1 = Math.random() * 80 + 60;
+            const _0xf1g2 = Math.random() * 40 + 30;
+            const _0xg2h3 = Math.random() * 40 + 50;
+            
+            _0xc8d9.style.cssText = `
+              position: fixed;
+              width: ${_0xd9e0}px;
+              height: ${_0xe0f1}px;
+              background: radial-gradient(ellipse ${_0xf1g2}% ${_0xg2h3}% at ${Math.random() * 50 + 25}% ${Math.random() * 50 + 25}%, 
+                rgba(74, 144, 226, ${0.7 + Math.random() * 0.3}) 0%,
+                rgba(93, 173, 226, ${0.5 + Math.random() * 0.3}) 20%,
+                rgba(133, 193, 233, ${0.4 + Math.random() * 0.3}) 40%,
+                rgba(174, 214, 241, ${0.3 + Math.random() * 0.2}) 65%,
+                rgba(214, 234, 248, ${0.1 + Math.random() * 0.1}) 85%,
+                transparent 100%);
+              border-radius: ${Math.random() * 40 + 30}% ${Math.random() * 40 + 50}% ${Math.random() * 40 + 40}% ${Math.random() * 40 + 35}%;
+              pointer-events: none;
+              z-index: ${9999 - _0xb7c8};
+              filter: blur(${5 + Math.random() * 6}px);
+              animation: humoOrganico${_0xb7c8 % 3} ${5 + Math.random() * 3}s ease-out forwards;
+            `;
+            
+            const _0xh3i4 = Math.random() * (window.innerWidth - _0xd9e0 + 40) - 20;
+            _0xc8d9.style.left = _0xh3i4 + 'px';
+            _0xc8d9.style.bottom = `${-_0xe0f1 - Math.random() * 30}px`;
+            
+            document.body.appendChild(_0xc8d9);
+            
+            setTimeout(() => {
+              if (_0xc8d9.parentNode) {
+                _0xc8d9.parentNode.removeChild(_0xc8d9);
+              }
+            }, 8000);
+          }, _0xb7c8 * 80);
+        }
+      };
+
+      const _0xi4j5 = () => {
+        for (let _0xj5k6 = 0; _0xj5k6 < 12; _0xj5k6++) {
+          setTimeout(() => {
+            const _0xk6l7 = document.createElement('div');
+            
+            const _0xl7m8 = Math.random() * 8 + 4;
+            
+            _0xk6l7.style.cssText = `
+              position: fixed;
+              width: ${_0xl7m8}px;
+              height: ${_0xl7m8}px;
+              background: radial-gradient(circle, 
+                rgba(135, 206, 235, 1) 0%,
+                rgba(74, 144, 226, 0.9) 40%,
+                rgba(52, 152, 219, 0.7) 70%,
+                transparent 100%);
+              border-radius: 50%;
+              pointer-events: none;
+              z-index: 10001;
+              filter: blur(1px);
+              box-shadow: 0 0 ${Math.random() * 6 + 4}px rgba(74, 144, 226, 0.8);
+              animation: chispaCayendo ${2 + Math.random() * 3}s linear forwards;
+            `;
+            
+            const _0xm8n9 = Math.random() * window.innerWidth;
+            _0xk6l7.style.left = _0xm8n9 + 'px';
+            _0xk6l7.style.top = '-20px';
+            
+            document.body.appendChild(_0xk6l7);
+            
+            setTimeout(() => {
+              if (_0xk6l7.parentNode) {
+                _0xk6l7.parentNode.removeChild(_0xk6l7);
+              }
+            }, 5000);
+          }, _0xj5k6 * 100);
+        }
+      };
+
+      const _0xn9o0 = () => {
+        if (document.getElementById('humo-styles')) return;
+        
+        const _0xo0p1 = document.createElement('style');
+        _0xo0p1.id = 'humo-styles';
+        _0xo0p1.textContent = `
+          @keyframes humoOrganico0 {
+            0% {
+              transform: translateY(0) translateX(0) scale(0.3) rotate(0deg) skew(0deg, 0deg);
+              opacity: 0;
+            }
+            15% {
+              opacity: 0.8;
+              transform: translateY(-15vh) translateX(${Math.random() * 40 - 20}px) scale(0.7) rotate(${Math.random() * 60}deg) skew(${Math.random() * 20 - 10}deg, ${Math.random() * 15}deg);
+            }
+            50% {
+              opacity: 0.6;
+              transform: translateY(-45vh) translateX(${Math.random() * 80 - 40}px) scale(1.3) rotate(${Math.random() * 180 + 90}deg) skew(${Math.random() * 30 - 15}deg, ${Math.random() * 25}deg);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-85vh) translateX(${Math.random() * 120 - 60}px) scale(2.2) rotate(${Math.random() * 360}deg) skew(${Math.random() * 40 - 20}deg, ${Math.random() * 35}deg);
+            }
+          }
+          
+          @keyframes humoOrganico1 {
+            0% {
+              transform: translateY(0) translateX(0) scale(0.4) rotate(0deg) skew(0deg, 0deg);
+              opacity: 0;
+            }
+            12% {
+              opacity: 0.7;
+              transform: translateY(-12vh) translateX(${Math.random() * 50 - 25}px) scale(0.8) rotate(${Math.random() * 80 + 20}deg) skew(${Math.random() * 25 - 12}deg, ${Math.random() * 20}deg);
+            }
+            55% {
+              opacity: 0.5;
+              transform: translateY(-50vh) translateX(${Math.random() * 90 - 45}px) scale(1.5) rotate(${Math.random() * 200 + 80}deg) skew(${Math.random() * 35 - 17}deg, ${Math.random() * 30}deg);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-90vh) translateX(${Math.random() * 140 - 70}px) scale(2.5) rotate(${Math.random() * 360}deg) skew(${Math.random() * 45 - 22}deg, ${Math.random() * 40}deg);
+            }
+          }
+          
+          @keyframes humoOrganico2 {
+            0% {
+              transform: translateY(0) translateX(0) scale(0.2) rotate(0deg) skew(0deg, 0deg);
+              opacity: 0;
+            }
+            10% {
+              opacity: 0.9;
+              transform: translateY(-10vh) translateX(${Math.random() * 30 - 15}px) scale(0.6) rotate(${Math.random() * 50}deg) skew(${Math.random() * 15 - 7}deg, ${Math.random() * 12}deg);
+            }
+            45% {
+              opacity: 0.7;
+              transform: translateY(-40vh) translateX(${Math.random() * 70 - 35}px) scale(1.1) rotate(${Math.random() * 150 + 60}deg) skew(${Math.random() * 25 - 12}deg, ${Math.random() * 20}deg);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-80vh) translateX(${Math.random() * 100 - 50}px) scale(2.0) rotate(${Math.random() * 360}deg) skew(${Math.random() * 35 - 17}deg, ${Math.random() * 30}deg);
+            }
+          }
+          
+          @keyframes chispaCayendo {
+            0% {
+              transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+              opacity: 1;
+            }
+            10% {
+              transform: translateY(10vh) translateX(${Math.random() * 40 - 20}px) scale(0.9) rotate(${Math.random() * 180}deg);
+              opacity: 0.9;
+            }
+            50% {
+              transform: translateY(50vh) translateX(${Math.random() * 80 - 40}px) scale(0.7) rotate(${Math.random() * 360}deg);
+              opacity: 0.6;
+            }
+            100% {
+              transform: translateY(100vh) translateX(${Math.random() * 120 - 60}px) scale(0.3) rotate(${Math.random() * 720}deg);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes cartelAparece {
+            0% {
+              transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+              opacity: 0;
+            }
+            20% {
+              transform: translate(-50%, -50%) scale(1.1) rotate(2deg);
+              opacity: 1;
+            }
+            30% {
+              transform: translate(-50%, -50%) scale(0.95) rotate(-1deg);
+            }
+            40% {
+              transform: translate(-50%, -50%) scale(1.02) rotate(0.5deg);
+            }
+            50% {
+              transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            80% {
+              transform: translate(-50%, -50%) scale(1) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes cartelNoAcierto {
+            0% {
+              transform: translate(-50%, -50%) scale(0) rotate(10deg);
+              opacity: 0;
+            }
+            10% {
+              transform: translate(-50%, -50%) scale(0.5) rotate(-5deg);
+              opacity: 0.7;
+            }
+            20% {
+              transform: translate(-50%, -50%) scale(1.2) rotate(3deg);
+              opacity: 1;
+            }
+            30% {
+              transform: translate(-50%, -50%) scale(0.95) rotate(-2deg);
+            }
+            40% {
+              transform: translate(-50%, -50%) scale(1.05) rotate(1deg);
+            }
+            50% {
+              transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            80% {
+              transform: translate(-50%, -50%) scale(1) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(_0xo0p1);
+      };
+
+      const _0xp1q2 = () => {
+        const _0xq2r3 = document.createElement('div');
+        const _0xr3s4 = Math.random() > 0.5;
+        
+        _0xq2r3.style.cssText = `
+          position: fixed;
+          width: 60px;
+          height: 60px;
+          background: radial-gradient(circle, 
+            rgba(52, 152, 219, 0.7) 0%,
+            rgba(93, 173, 226, 0.5) 40%,
+            rgba(174, 214, 241, 0.3) 70%,
+            transparent 100%);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 9999;
+          filter: blur(6px);
+          animation: humoLateral 6s ease-out forwards;
+          ${_0xr3s4 ? 'left: -60px;' : 'right: -60px;'}
+          top: ${Math.random() * 50 + 20}vh;
+        `;
+        
+        if (!_0xr3s4) {
+          _0xq2r3.style.transform = 'scaleX(-1)';
+        }
+        
+        document.body.appendChild(_0xq2r3);
+        
+        setTimeout(() => {
+          if (_0xq2r3.parentNode) {
+            _0xq2r3.parentNode.removeChild(_0xq2r3);
+          }
+        }, 6000);
+      };
+
+      const _0xs4t5 = () => {
+        confetti({
+          particleCount: 8,
+          angle: 90,
+          spread: 30,
+          origin: { 
+            x: Math.random() * 0.6 + 0.2, 
+            y: 1.05 
+          },
+          colors: ['#3498DB', '#5DADE2', '#AED6F1'],
+          gravity: -0.03,
+          scalar: 1.5,
+          drift: Math.random() * 2 - 1,
+          ticks: 100,
+          shapes: ['circle'],
+          startVelocity: 2,
+          flat: true
+        });
+      };
+
+      _0xn9o0();
+      
+      let _0xt5u6 = 0;
+      const _0xu6v7 = 10000;
+      const _0xv7w8 = 250;
+
+      const _0xw8x9 = () => {
+        if (_0xt5u6 >= _0xu6v7) {
+          return;
+        }
+
+        _0xa6b7();
+        
+        if (Math.random() > 0.4) {
+          _0xi4j5();
+        }
+        
+        if (Math.random() > 0.7) {
+          _0xp1q2();
+        }
+        
+        if (Math.random() > 0.8) {
+          _0xs4t5();
+        }
+
+        _0xt5u6 += _0xv7w8;
+        setTimeout(_0xw8x9, _0xv7w8);
+      };
+
+      _0xa6b7();
+      _0xi4j5();
+      setTimeout(() => _0xa6b7(), 150);
+      setTimeout(() => _0xi4j5(), 300);
+      setTimeout(() => _0xa6b7(), 400);
+      setTimeout(() => _0xa6b7(), 600);
+      
+      setTimeout(_0xw8x9, _0xv7w8);
+    }
+
+    // Mostrar cartel de acierto en el centro (función ofuscada)
+    function _0xt9u0() {
+      const _0xx9y0 = document.createElement('div');
+      _0xx9y0.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: linear-gradient(135deg, #4A90E2 0%, #357ABD 50%, #1E3A8A 100%);
+        color: white;
+        padding: 30px 40px;
+        border-radius: 20px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: clamp(18px, 4vw, 24px);
+        line-height: 1.4;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(74, 144, 226, 0.5);
+        border: 3px solid rgba(255,255,255,0.3);
+        z-index: 99999;
+        pointer-events: none;
+        animation: cartelAparece 6s ease-out forwards;
+        max-width: 90vw;
+        backdrop-filter: blur(5px);
+      `;
+      
+      _0xx9y0.innerHTML = `
+        <div style="font-size: 1.2em; margin-bottom: 10px;">🎉 ¡ACERTASTE! 🎉</div>
+        <div style="font-size: 0.9em; color: #E3F2FD;">Te esperamos pronto en el</div>
+        <div style="font-size: 1.1em; color: #BBDEFB; margin-top: 5px;">✨ BABY SHOWER ✨</div>
+      `;
+      
+      document.body.appendChild(_0xx9y0);
+      
+      setTimeout(() => {
+        if (_0xx9y0.parentNode) {
+          _0xx9y0.parentNode.removeChild(_0xx9y0);
+        }
+      }, 6000);
+    }
+
+    // Mostrar cartel para los que no acertaron (función ofuscada)
+    function _0xu0v1() {
+      const _0xy0z1 = document.createElement('div');
+      _0xy0z1.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 50%, #C44569 100%);
+        color: white;
+        padding: 30px 40px;
+        border-radius: 20px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: clamp(18px, 4vw, 24px);
+        line-height: 1.4;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(255, 107, 107, 0.5);
+        border: 3px solid rgba(255,255,255,0.3);
+        z-index: 99999;
+        pointer-events: none;
+        animation: none;
+        max-width: 90vw;
+        backdrop-filter: blur(5px);
+      `;
+      
+      _0xy0z1.innerHTML = `
+        <div style="font-size: 1.3em; margin-bottom: 12px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">😄 Jaja nop, es un niño!</div>
+        <div style="font-size: 1.4em; color: #FFE5E5; margin-top: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Se viene el heredero</div>
+        <div style="font-size: 2.5em; margin-top: 10px;">😎</div>
+      `;
+      
+      document.body.appendChild(_0xy0z1);
+      
+      setTimeout(() => {
+        _0xy0z1.style.transform = 'translate(-50%, -50%) scale(1)';
+        _0xy0z1.style.opacity = '1';
+      }, 10);
+      
+      setTimeout(() => {
+        if (_0xy0z1.parentNode) {
+          _0xy0z1.parentNode.removeChild(_0xy0z1);
+        }
+      }, 6000);
+    }
+
+    // Protección adicional de la marca registrada
+    setInterval(() => {
+      const _0xz1a2 = document.querySelector('.marca-registrada');
+      if (!_0xz1a2 || _0xz1a2.textContent !== '© Rodri R.™') {
+        alert('🚫 Modificación no autorizada detectada\n\n© Rodri R.™ - Todos los derechos reservados');
+        location.reload();
+      }
+    }, 5000);
+  </script>
+</body>
+</html>
