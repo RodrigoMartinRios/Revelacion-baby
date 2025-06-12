@@ -19,7 +19,7 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background: linear-gradient(to right,rgb(125, 164, 236), #ed77f1);
+      background: linear-gradient(to right,rgb(163, 192, 248), #e898eb);
       color: #333;
       padding: 20px;
       margin: 0;
@@ -181,7 +181,7 @@
 </head>
 <body>
   <h1>🎉 Adiviná el género del bebé 👶</h1>
-  <p>Ingresá tu nombre real y elegí una opción. Luego agitá tu teléfono 📱</p>
+  <p>Ingresá tu nombre y elegí una opción. Luego agitá tu teléfono 📱</p>
 
   <input type="text" id="nombre" placeholder="Tu nombre real" required />
 
@@ -190,7 +190,7 @@
     <button id="btnNina">👧 Niña</button>
   </div>
 
-  <button id="btnAgitar" style="display:none;">📱 Simular Agitado</button>
+  //<button id="btnAgitar" style="display:none;">📱 Simular Agitado</button>
 
   <p id="instruccion" style="font-weight:bold;"></p>
   <p id="result"></p>
@@ -356,7 +356,7 @@
           if (_0xq6r7 === "sí") {
             _0xs8t9();
             _0xt9u0();
-            _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
+            // _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
           } else {
             _0xu0v1();
             _0xc2d3.innerText = "";
@@ -397,7 +397,7 @@
           if (_0xq6r7 === "sí") {
             _0xs8t9();
             _0xt9u0();
-            _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
+            // _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
           } else {
             _0xu0v1();
             _0xc2d3.innerText = "";
@@ -514,39 +514,124 @@
         }
       };
 
-      // Fuegos artificiales optimizados
+      // Fuegos artificiales mejorados - cohetes desde abajo
       const _0xfuegosArtificiales = () => {
-        for (let _0xi = 0; _0xi < 8; _0xi++) {
+        // Crear múltiples cohetes que suben desde abajo
+        for (let _0xi = 0; _0xi < 6; _0xi++) {
           setTimeout(() => {
-            const _0xfuego = document.createElement('div');
+            const _0xstartX = Math.random() * (window.innerWidth - 100) + 50;
             
-            _0xfuego.style.cssText = `
+            // Crear cohete
+            const _0xcohete = document.createElement('div');
+            _0xcohete.style.cssText = `
               position: fixed;
-              width: 4px;
-              height: 4px;
-              background: radial-gradient(circle, 
-                ${_0xi % 3 === 0 ? '#FFD700' : _0xi % 3 === 1 ? '#FF6B6B' : '#4A90E2'} 0%,
-                ${_0xi % 3 === 0 ? '#FFA500' : _0xi % 3 === 1 ? '#FF4757' : '#357ABD'} 60%,
-                transparent 100%);
-              border-radius: 50%;
+              width: 6px;
+              height: 20px;
+              background: linear-gradient(to top, 
+                #4A90E2 0%, 
+                #74B4F0 40%,
+                #A8D5FF 80%, 
+                #FFFFFF 100%);
+              border-radius: 3px 3px 0 0;
               pointer-events: none;
-              z-index: 10005;
-              animation: explotar ${1.2 + Math.random() * 1.5}s ease-out forwards;
-              left: ${Math.random() * window.innerWidth}px;
-              top: ${Math.random() * window.innerHeight * 0.6 + window.innerHeight * 0.2}px;
-              box-shadow: 0 0 ${Math.random() * 6 + 3}px ${_0xi % 3 === 0 ? '#FFD700' : _0xi % 3 === 1 ? '#FF6B6B' : '#4A90E2'};
+              z-index: 10010;
+              left: ${_0xstartX}px;
+              bottom: -30px;
+              animation: coheteSubida ${1.8 + Math.random() * 0.4}s ease-out forwards;
+              box-shadow: 0 0 8px #4A90E2, 0 0 16px rgba(74, 144, 226, 0.5);
               will-change: transform, opacity;
               transform: translateZ(0);
             `;
             
-            document.body.appendChild(_0xfuego);
+            document.body.appendChild(_0xcohete);
+            
+            // Después de que el cohete suba, crear la explosión
+            setTimeout(() => {
+              // Eliminar cohete
+              if (_0xcohete.parentNode) {
+                _0xcohete.parentNode.removeChild(_0xcohete);
+              }
+              
+              // Crear explosión en múltiples capas
+              const _0xexplX = _0xstartX;
+              const _0xexplY = window.innerHeight * 0.25 + Math.random() * window.innerHeight * 0.2;
+              
+              // Capa 1: Explosión principal
+              for (let _0xj = 0; _0xj < 12; _0xj++) {
+                const _0xparticula = document.createElement('div');
+                const _0xangulo = (_0xj * 30) + Math.random() * 30;
+                const _0xsize = Math.random() * 8 + 6;
+                
+                _0xparticula.style.cssText = `
+                  position: fixed;
+                  width: ${_0xsize}px;
+                  height: ${_0xsize}px;
+                  background: radial-gradient(circle, 
+                    #4A90E2 0%,
+                    #74B4F0 30%,
+                    #A8D5FF 60%,
+                    transparent 100%);
+                  border-radius: 50%;
+                  pointer-events: none;
+                  z-index: 10008;
+                  left: ${_0xexplX}px;
+                  top: ${_0xexplY}px;
+                  animation: explosion${_0xj % 3} ${2 + Math.random() * 1}s ease-out forwards;
+                  box-shadow: 0 0 ${_0xsize}px #4A90E2;
+                  will-change: transform, opacity;
+                  transform: translateZ(0) rotate(${_0xangulo}deg);
+                `;
+                
+                document.body.appendChild(_0xparticula);
+                
+                setTimeout(() => {
+                  if (_0xparticula.parentNode) {
+                    _0xparticula.parentNode.removeChild(_0xparticula);
+                  }
+                }, 3000);
+              }
+              
+              // Capa 2: Chispas adicionales
+              for (let _0xk = 0; _0xk < 8; _0xk++) {
+                setTimeout(() => {
+                  const _0xchispa = document.createElement('div');
+                  const _0xchispaSize = Math.random() * 4 + 3;
+                  
+                  _0xchispa.style.cssText = `
+                    position: fixed;
+                    width: ${_0xchispaSize}px;
+                    height: ${_0xchispaSize}px;
+                    background: #74B4F0;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 10007;
+                    left: ${_0xexplX + (Math.random() - 0.5) * 60}px;
+                    top: ${_0xexplY + (Math.random() - 0.5) * 60}px;
+                    animation: chispasCaida ${1.5 + Math.random() * 1}s ease-out forwards;
+                    box-shadow: 0 0 ${_0xchispaSize * 2}px #74B4F0;
+                    will-change: transform, opacity;
+                    transform: translateZ(0);
+                  `;
+                  
+                  document.body.appendChild(_0xchispa);
+                  
+                  setTimeout(() => {
+                    if (_0xchispa.parentNode) {
+                      _0xchispa.parentNode.removeChild(_0xchispa);
+                    }
+                  }, 2500);
+                }, _0xk * 50);
+              }
+              
+            }, (1.8 + Math.random() * 0.4) * 1000);
             
             setTimeout(() => {
-              if (_0xfuego.parentNode) {
-                _0xfuego.parentNode.removeChild(_0xfuego);
+              if (_0xcohete.parentNode) {
+                _0xcohete.parentNode.removeChild(_0xcohete);
               }
-            }, 2700);
-          }, _0xi * 150);
+            }, 4000);
+            
+          }, _0xi * 200);
         }
       };
 
@@ -628,6 +713,105 @@
             }
           }
           
+          @keyframes coheteSubida {
+            0% {
+              bottom: -30px;
+              opacity: 1;
+              transform: translateZ(0) scale(1);
+            }
+            20% {
+              bottom: 20vh;
+              opacity: 1;
+              transform: translateZ(0) scale(1.1);
+            }
+            60% {
+              bottom: 60vh;
+              opacity: 0.9;
+              transform: translateZ(0) scale(1.2);
+            }
+            100% {
+              bottom: 75vh;
+              opacity: 0;
+              transform: translateZ(0) scale(1.5);
+            }
+          }
+          
+          @keyframes explosion0 {
+            0% {
+              transform: translate3d(0, 0, 0) scale(0) rotate(0deg);
+              opacity: 0;
+            }
+            15% {
+              transform: translate3d(40px, -20px, 0) scale(1.5) rotate(45deg);
+              opacity: 1;
+            }
+            50% {
+              transform: translate3d(80px, -10px, 0) scale(2.2) rotate(180deg);
+              opacity: 0.8;
+            }
+            100% {
+              transform: translate3d(120px, 30px, 0) scale(0.5) rotate(360deg);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes explosion1 {
+            0% {
+              transform: translate3d(0, 0, 0) scale(0) rotate(0deg);
+              opacity: 0;
+            }
+            15% {
+              transform: translate3d(-30px, -40px, 0) scale(1.8) rotate(-60deg);
+              opacity: 1;
+            }
+            50% {
+              transform: translate3d(-60px, -20px, 0) scale(2.5) rotate(-180deg);
+              opacity: 0.7;
+            }
+            100% {
+              transform: translate3d(-90px, 20px, 0) scale(0.3) rotate(-360deg);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes explosion2 {
+            0% {
+              transform: translate3d(0, 0, 0) scale(0) rotate(0deg);
+              opacity: 0;
+            }
+            15% {
+              transform: translate3d(20px, -50px, 0) scale(1.6) rotate(120deg);
+              opacity: 1;
+            }
+            50% {
+              transform: translate3d(35px, -30px, 0) scale(2.8) rotate(240deg);
+              opacity: 0.6;
+            }
+            100% {
+              transform: translate3d(50px, 40px, 0) scale(0.4) rotate(480deg);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes chispasCaida {
+            0% {
+              transform: translate3d(0, 0, 0) scale(1);
+              opacity: 1;
+            }
+            30% {
+              transform: translate3d(0, 30px, 0) scale(0.8);
+              opacity: 0.8;
+            }
+            70% {
+              transform: translate3d(0, 80px, 0) scale(0.5);
+              opacity: 0.4;
+            }
+            100% {
+              transform: translate3d(0, 120px, 0) scale(0.2);
+              opacity: 0;
+            }
+          }
+          
           @keyframes explotar {
             0% {
               transform: translate3d(0, 0, 0) scale(0) rotate(0deg);
@@ -671,17 +855,17 @@
               transform: translate(-50%, -50%) scale(0) rotate(-3deg);
               opacity: 0;
             }
-            20% {
+            5% {
               transform: translate(-50%, -50%) scale(1.02) rotate(1deg);
               opacity: 1;
             }
-            40% {
+            10% {
               transform: translate(-50%, -50%) scale(0.99) rotate(-0.5deg);
             }
-            60% {
+            15% {
               transform: translate(-50%, -50%) scale(1) rotate(0deg);
             }
-            85% {
+            90% {
               transform: translate(-50%, -50%) scale(1) rotate(0deg);
               opacity: 1;
             }
@@ -696,17 +880,17 @@
               transform: translate(-50%, -50%) scale(0) rotate(3deg);
               opacity: 0;
             }
-            18% {
+            5% {
               transform: translate(-50%, -50%) scale(1.05) rotate(-2deg);
               opacity: 1;
             }
-            35% {
+            10% {
               transform: translate(-50%, -50%) scale(0.97) rotate(1deg);
             }
-            55% {
+            15% {
               transform: translate(-50%, -50%) scale(1) rotate(0deg);
             }
-            85% {
+            90% {
               transform: translate(-50%, -50%) scale(1) rotate(0deg);
               opacity: 1;
             }
@@ -842,7 +1026,7 @@
         border: 3px solid rgba(255,255,255,0.3);
         z-index: 99999;
         pointer-events: none;
-        animation: cartelAparece 6s ease-out forwards;
+        animation: cartelAparece 20s ease-out forwards;
         max-width: 90vw;
         backdrop-filter: blur(5px);
       `;
@@ -859,7 +1043,7 @@
         if (_0xx9y0.parentNode) {
           _0xx9y0.parentNode.removeChild(_0xx9y0);
         }
-      }, 6000);
+      }, 20000);
     }
 
     // Mostrar cartel para los que no acertaron con fuegos artificiales (función ofuscada)
@@ -907,7 +1091,7 @@
         border: 3px solid rgba(255,255,255,0.3);
         z-index: 99999;
         pointer-events: none;
-        animation: none;
+        animation: cartelNoAcierto 20s ease-out forwards;
         max-width: 90vw;
         backdrop-filter: blur(5px);
       `;
@@ -921,15 +1105,10 @@
       document.body.appendChild(_0xy0z1);
       
       setTimeout(() => {
-        _0xy0z1.style.transform = 'translate(-50%, -50%) scale(1)';
-        _0xy0z1.style.opacity = '1';
-      }, 10);
-      
-      setTimeout(() => {
         if (_0xy0z1.parentNode) {
           _0xy0z1.parentNode.removeChild(_0xy0z1);
         }
-      }, 6000);
+      }, 20000);
     }
 
     // Protección adicional de la marca registrada
