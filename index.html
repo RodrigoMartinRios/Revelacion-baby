@@ -190,10 +190,8 @@
   <div class="button-container">
     <button id="btnNino">👦 Niño</button>
     <button id="btnNina">👧 Niña</button>
-    <button id="btnVerResultado" style="display:none; background-color:#4caf50;">Ver resultado</button>
   </div>
-
-  <!-- <button id="btnAgitar" style="display:none;">📱 Simular Agitado</button> -->
+  <button id="btnAgitar" style="display:none; background-color:#ff6b6b;">📱 Simular Agitado</button>
 
   <p id="instruccion" style="font-weight:bold;"></p>
   <p id="result"></p>
@@ -282,14 +280,14 @@
     // Botones de selección (ofuscados)
     document.getElementById('btnNino').onclick = () => {
       _0x9i0j = "niño";
-      _0xd3e4.innerText = "Presioná el botón 'Ver resultado' para conocer la revelación";
+      _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
     };
 
     document.getElementById('btnNina').onclick = () => {
       _0x9i0j = "niña";
-      _0xd3e4.innerText = "Presioná el botón 'Ver resultado' para conocer la revelación";
+      _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
     };
@@ -301,14 +299,6 @@
       }
     };
 
-    // Botón para ver resultado
-    document.getElementById('btnVerResultado').onclick = () => {
-      if (_0x9i0j && !_0xa0b1) {
-        _0xh7i8();
-        document.getElementById('btnVerResultado').style.display = 'none';
-      }
-    };
-
     // Marcar botón activo (función ofuscada)
     function _0xf5g6(_0xi8j9, _0xj9k0) {
       document.getElementById(_0xi8j9).classList.add("selected");
@@ -317,7 +307,7 @@
 
     // Mostrar botón de agitar (función ofuscada)
     function _0xg6h7() {
-      document.getElementById('btnVerResultado').style.display = 'inline-block';
+      document.getElementById('btnAgitar').style.display = 'inline-block';
     }
 
     // Detectar sacudida (ofuscado)
