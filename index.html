@@ -190,6 +190,7 @@
   <div class="button-container">
     <button id="btnNino">👦 Niño</button>
     <button id="btnNina">👧 Niña</button>
+    <button id="btnVerResultado" style="display:none; background-color:#4caf50;">Ver resultado</button>
   </div>
 
   <!-- <button id="btnAgitar" style="display:none;">📱 Simular Agitado</button> -->
@@ -281,20 +282,27 @@
     // Botones de selección (ofuscados)
     document.getElementById('btnNino').onclick = () => {
       _0x9i0j = "niño";
-      _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
+      _0xd3e4.innerText = "";
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
     };
 
     document.getElementById('btnNina').onclick = () => {
       _0x9i0j = "niña";
-      _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
+      _0xd3e4.innerText = "";
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
     };
 
     // Botón para simular agitado
     document.getElementById('btnAgitar').onclick = () => {
+      if (_0x9i0j && !_0xa0b1) {
+        _0xh7i8();
+      }
+    };
+
+    // Botón para ver resultado
+    document.getElementById('btnVerResultado').onclick = () => {
       if (_0x9i0j && !_0xa0b1) {
         _0xh7i8();
       }
@@ -308,7 +316,7 @@
 
     // Mostrar botón de agitar (función ofuscada)
     function _0xg6h7() {
-      document.getElementById('btnAgitar').style.display = 'inline-block';
+      document.getElementById('btnVerResultado').style.display = 'inline-block';
     }
 
     // Detectar sacudida (ofuscado)
