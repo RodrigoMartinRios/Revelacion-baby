@@ -191,7 +191,7 @@
     <button id="btnNino">👦 Niño</button>
     <button id="btnNina">👧 Niña</button>
   </div>
-  <button id="btnAgitar" style="display:none; background-color:#ff6b6b;">📱 Ver Resultado</button> -->
+  <button id="btnAgitar" style="display:none; background-color:#ff6b6b;">📱 Ver Resultado</button> 
 
   <p id="instruccion" style="font-weight:bold;"></p>
   <p id="result"></p>
@@ -349,6 +349,7 @@
       _0xc2d3.innerText = "";
 
       const _0xq6r7 = _0x9i0j === _0xe4f5 ? "sí" : "no";
+      console.log('Opción seleccionada:', _0x9i0j, 'Respuesta correcta:', _0xe4f5, 'Acierto:', _0xq6r7);
 
       // 🔽 PEGÁ AQUÍ TU URL DEL SCRIPT DE GOOGLE APPS ENTRE COMILLAS
       const _0xr7s8 = "PEGÁ_AQUÍ_TU_URL_DEL_SCRIPT";
@@ -360,8 +361,8 @@
           if (_0xq6r7 === "sí") {
             _0xs8t9();
             _0xt9u0();
-            // _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
           } else {
+            console.log('Mostrando cartel de error (niña)');
             _0xu0v1();
             _0xc2d3.innerText = "";
           }
@@ -401,8 +402,8 @@
           if (_0xq6r7 === "sí") {
             _0xs8t9();
             _0xt9u0();
-            // _0xc2d3.innerText = "🎉 ¡Acertaste! ¡Te ganaste una birra o gaseosa! 🍻";
           } else {
+            console.log('Mostrando cartel de error (niña)');
             _0xu0v1();
             _0xc2d3.innerText = "";
           }
@@ -1081,7 +1082,7 @@
         position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%) scale(0);
+        transform: translate(-50%, -50%) scale(1);
         background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 50%, #C44569 100%);
         color: white;
         padding: 30px 40px;
@@ -1093,21 +1094,22 @@
         line-height: 1.4;
         box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(255, 107, 107, 0.5);
         border: 3px solid rgba(255,255,255,0.3);
-        z-index: 99999;
-        pointer-events: none;
+        z-index: 999999 !important;
+        pointer-events: auto;
         animation: cartelNoAcierto 20s ease-out forwards;
         max-width: 90vw;
         backdrop-filter: blur(5px);
+        visibility: visible !important;
+        opacity: 1 !important;
       `;
       
       _0xy0z1.innerHTML = `
-        <div style="font-size: 1.3em; margin-bottom: 12px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">😄 Jaja nop, es un niño!</div>
-        <div style="font-size: 1.4em; color: #FFE5E5; margin-top: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Se viene el heredero</div>
-        <div style="font-size: 2.5em; margin-top: 10px;">😎</div>
+        <div style="font-size: 1.3em; margin-bottom: 12px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">😄 Jaja nop, es un niño! 😎</div>
+        <div style="font-size: 1.2em; color: #FFE5E5; margin-top: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">Te esperamos pronto en el baby shower igual</div>
       `;
       
       document.body.appendChild(_0xy0z1);
-      
+      console.log('Cartel de error agregado al DOM');
       setTimeout(() => {
         if (_0xy0z1.parentNode) {
           _0xy0z1.parentNode.removeChild(_0xy0z1);
