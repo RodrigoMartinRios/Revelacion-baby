@@ -294,8 +294,11 @@
 
     // Botón para ver resultado
     document.getElementById('btnAgitar').onclick = () => {
-      if (_0x9i0j && !_0xa0b1) {
+      // Siempre intentar mostrar el resultado si hay opción seleccionada
+      if (_0x9i0j) {
         _0xh7i8();
+      } else {
+        _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
       }
     };
 
