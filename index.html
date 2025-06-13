@@ -282,14 +282,14 @@
     // Botones de selección (ofuscados)
     document.getElementById('btnNino').onclick = () => {
       _0x9i0j = "niño";
-      _0xd3e4.innerText = "";
+      _0xd3e4.innerText = "Presioná el botón 'Ver resultado' para conocer la revelación";
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
     };
 
     document.getElementById('btnNina').onclick = () => {
       _0x9i0j = "niña";
-      _0xd3e4.innerText = "";
+      _0xd3e4.innerText = "Presioná el botón 'Ver resultado' para conocer la revelación";
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
     };
@@ -305,6 +305,7 @@
     document.getElementById('btnVerResultado').onclick = () => {
       if (_0x9i0j && !_0xa0b1) {
         _0xh7i8();
+        document.getElementById('btnVerResultado').style.display = 'none';
       }
     };
 
