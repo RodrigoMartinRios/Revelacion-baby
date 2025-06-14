@@ -274,6 +274,7 @@
     let _0xmostrarResultado = false;
     let _0xesperandoAccion = false;
     let _0xprocesandoVoto = false;
+    let _0xopcionSeleccionada = false;
     const _0xb1c2 = document.getElementById('nombre');
     const _0xc2d3 = document.getElementById('result');
     const _0xd3e4 = document.getElementById('instruccion');
@@ -284,6 +285,7 @@
     document.getElementById('btnNino').onclick = () => {
       if (_0xprocesandoVoto) return;
       _0x9i0j = "niño";
+      _0xopcionSeleccionada = true;
       _0xmostrarResultado = false;
       _0xesperandoAccion = true;
       _0xprocesandoVoto = false;
@@ -295,6 +297,7 @@
     document.getElementById('btnNina').onclick = () => {
       if (_0xprocesandoVoto) return;
       _0x9i0j = "niña";
+      _0xopcionSeleccionada = true;
       _0xmostrarResultado = false;
       _0xesperandoAccion = true;
       _0xprocesandoVoto = false;
@@ -307,7 +310,7 @@
     document.getElementById('btnAgitar').onclick = () => {
       if (_0xprocesandoVoto) return;
       
-      if (!_0x9i0j) {
+      if (!_0x9i0j || !_0xopcionSeleccionada) {
         _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
         return;
       }
@@ -328,7 +331,7 @@
     const _0xtiempoMaximo = 2000;
 
     window.addEventListener("devicemotion", (_0xl1m2) => {
-      if (!_0x9i0j || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto) return;
+      if (!_0x9i0j || !_0xopcionSeleccionada || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto) return;
 
       const _0xm2n3 = _0xl1m2.accelerationIncludingGravity;
       if (!_0xm2n3) return;
@@ -373,7 +376,7 @@
 
     // Enviar voto al servidor (función principal ofuscada)
     function _0xh7i8() {
-      if (!_0xmostrarResultado || !_0xprocesandoVoto) return;
+      if (!_0xmostrarResultado || !_0xprocesandoVoto || !_0xopcionSeleccionada) return;
 
       const _0xp5q6 = _0xb1c2.value.trim();
 
@@ -420,6 +423,7 @@
           }
           _0xd3e4.innerText = "✅ ¡Listo! Gracias por participar";
           _0xprocesandoVoto = false;
+          _0xopcionSeleccionada = false;
         }, 1000);
         return;
       }
@@ -452,6 +456,7 @@
           _0xc2d3.innerText = "❌ Ya registraste tu voto, ¡gracias!";
           _0xd3e4.innerText = "🚫 Voto duplicado";
           _0xprocesandoVoto = false;
+          _0xopcionSeleccionada = false;
         } else {
           // Esperar un momento antes de mostrar el resultado
           setTimeout(() => {
@@ -465,6 +470,7 @@
             }
             _0xd3e4.innerText = "✅ ¡Voto registrado exitosamente!";
             _0xprocesandoVoto = false;
+            _0xopcionSeleccionada = false;
           }, 1000);
         }
       })
@@ -474,6 +480,7 @@
         _0xmostrarResultado = false;
         _0xprocesandoVoto = false;
         _0xesperandoAccion = true;
+        _0xopcionSeleccionada = false;
         
         if (_0xz5a6.message === 'Timeout') {
           _0xc2d3.innerText = "⏰ Tiempo agotado. Verificá tu conexión e intentá de nuevo.";
