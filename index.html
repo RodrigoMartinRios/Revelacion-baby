@@ -352,7 +352,8 @@
     let _0xprocesandoVoto = false;
     let _0xopcionSeleccionada = false;
     let _0xaccionUsuario = false;
-    let _0xmostrarMensajeAgitar = false; // Nueva variable para controlar el mensaje
+    let _0xmostrarMensajeAgitar = false;
+    let _0xbloquearResultado = true;
     const _0xb1c2 = document.getElementById('nombre');
     const _0xc2d3 = document.getElementById('result');
     const _0xd3e4 = document.getElementById('instruccion');
@@ -367,6 +368,7 @@
       _0xopcionSeleccionada = false;
       _0xaccionUsuario = false;
       _0xmostrarMensajeAgitar = false;
+      _0xbloquearResultado = true;
       _0xc2d3.innerText = "";
     }
 
@@ -385,6 +387,7 @@
       _0xopcionSeleccionada = true;
       _0xesperandoAccion = true;
       _0xmostrarMensajeAgitar = true;
+      _0xbloquearResultado = true;
       _0xmostrarMensaje();
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
@@ -397,6 +400,7 @@
       _0xopcionSeleccionada = true;
       _0xesperandoAccion = true;
       _0xmostrarMensajeAgitar = true;
+      _0xbloquearResultado = true;
       _0xmostrarMensaje();
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
@@ -419,6 +423,7 @@
       _0xmostrarResultado = true;
       _0xesperandoAccion = false;
       _0xmostrarMensajeAgitar = false;
+      _0xbloquearResultado = false;
       _0xd3e4.innerText = "⏳ Procesando tu voto...";
       _0xh7i8();
     };
@@ -432,7 +437,7 @@
 
     window.addEventListener("devicemotion", (_0xl1m2) => {
       // Verificar si debemos procesar el evento
-      if (!_0x9i0j || !_0xopcionSeleccionada || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto || _0xaccionUsuario || !_0xmostrarMensajeAgitar) {
+      if (!_0x9i0j || !_0xopcionSeleccionada || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto || _0xaccionUsuario || !_0xmostrarMensajeAgitar || !_0xbloquearResultado) {
         return;
       }
 
@@ -462,6 +467,7 @@
           _0xmostrarResultado = true;
           _0xesperandoAccion = false;
           _0xmostrarMensajeAgitar = false;
+          _0xbloquearResultado = false;
           _0xd3e4.innerText = "⏳ Procesando tu voto...";
           _0xh7i8();
         }
@@ -491,12 +497,13 @@
     // Enviar voto al servidor (función principal ofuscada)
     function _0xh7i8() {
       // Verificar todas las condiciones necesarias
-      if (!_0xmostrarResultado || !_0xprocesandoVoto || !_0xopcionSeleccionada || !_0xaccionUsuario) {
+      if (!_0xmostrarResultado || !_0xprocesandoVoto || !_0xopcionSeleccionada || !_0xaccionUsuario || _0xbloquearResultado) {
         console.log('Condiciones no cumplidas:', {
           mostrarResultado: _0xmostrarResultado,
           procesandoVoto: _0xprocesandoVoto,
           opcionSeleccionada: _0xopcionSeleccionada,
-          accionUsuario: _0xaccionUsuario
+          accionUsuario: _0xaccionUsuario,
+          bloquearResultado: _0xbloquearResultado
         });
         return;
       }
@@ -508,6 +515,7 @@
         _0xresetearEstados();
         _0xesperandoAccion = true;
         _0xmostrarMensajeAgitar = true;
+        _0xbloquearResultado = true;
         _0xmostrarMensaje();
         return;
       }
@@ -517,6 +525,7 @@
         _0xresetearEstados();
         _0xesperandoAccion = true;
         _0xmostrarMensajeAgitar = true;
+        _0xbloquearResultado = true;
         _0xmostrarMensaje();
         return;
       }
@@ -531,7 +540,8 @@
         respuestaCorrecta: _0xe4f5,
         acierto: _0xq6r7,
         accionUsuario: _0xaccionUsuario,
-        mostrarMensajeAgitar: _0xmostrarMensajeAgitar
+        mostrarMensajeAgitar: _0xmostrarMensajeAgitar,
+        bloquearResultado: _0xbloquearResultado
       });
 
       // 🔽 PEGÁ AQUÍ TU URL DEL SCRIPT DE GOOGLE APPS ENTRE COMILLAS
@@ -542,7 +552,7 @@
         console.warn("URL del script no configurada");
         // Esperar un momento antes de mostrar el resultado
         setTimeout(() => {
-          if (!_0xaccionUsuario) return; // Verificar nuevamente que fue una acción del usuario
+          if (!_0xaccionUsuario || _0xbloquearResultado) return; // Verificar nuevamente que fue una acción del usuario
           if (_0xq6r7 === "sí") {
             _0xs8t9();
             _0xt9u0();
@@ -575,14 +585,14 @@
         _0xw2x3
       ])
       .then(_0xx3y4 => {
-        if (!_0xaccionUsuario) throw new Error('Acción cancelada');
+        if (!_0xaccionUsuario || _0xbloquearResultado) throw new Error('Acción cancelada');
         if (!_0xx3y4.ok) {
           throw new Error(`HTTP ${_0xx3y4.status}: ${_0xx3y4.statusText}`);
         }
         return _0xx3y4.text();
       })
       .then(_0xy4z5 => {
-        if (!_0xaccionUsuario) throw new Error('Acción cancelada');
+        if (!_0xaccionUsuario || _0xbloquearResultado) throw new Error('Acción cancelada');
         if (_0xy4z5 === "duplicado") {
           _0xc2d3.innerText = "❌ Ya registraste tu voto, ¡gracias!";
           _0xd3e4.innerText = "🚫 Voto duplicado";
@@ -590,7 +600,7 @@
         } else {
           // Esperar un momento antes de mostrar el resultado
           setTimeout(() => {
-            if (!_0xaccionUsuario) return; // Verificar nuevamente que fue una acción del usuario
+            if (!_0xaccionUsuario || _0xbloquearResultado) return; // Verificar nuevamente que fue una acción del usuario
             if (_0xq6r7 === "sí") {
               _0xs8t9();
               _0xt9u0();
@@ -610,6 +620,8 @@
         
         _0xresetearEstados();
         _0xesperandoAccion = true;
+        _0xmostrarMensajeAgitar = true;
+        _0xbloquearResultado = true;
         
         if (_0xz5a6.message === 'Timeout') {
           _0xc2d3.innerText = "⏰ Tiempo agotado. Verificá tu conexión e intentá de nuevo.";
