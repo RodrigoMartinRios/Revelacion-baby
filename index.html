@@ -273,6 +273,7 @@
     let _0xa0b1 = false;
     let _0xmostrarResultado = false;
     let _0xesperandoAccion = false;
+    let _0xprocesandoVoto = false;
     const _0xb1c2 = document.getElementById('nombre');
     const _0xc2d3 = document.getElementById('result');
     const _0xd3e4 = document.getElementById('instruccion');
@@ -281,18 +282,22 @@
 
     // Botones de selección (ofuscados)
     document.getElementById('btnNino').onclick = () => {
+      if (_0xprocesandoVoto) return;
       _0x9i0j = "niño";
       _0xmostrarResultado = false;
       _0xesperandoAccion = true;
+      _0xprocesandoVoto = false;
       _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
     };
 
     document.getElementById('btnNina').onclick = () => {
+      if (_0xprocesandoVoto) return;
       _0x9i0j = "niña";
       _0xmostrarResultado = false;
       _0xesperandoAccion = true;
+      _0xprocesandoVoto = false;
       _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
@@ -300,6 +305,8 @@
 
     // Botón para ver resultado
     document.getElementById('btnAgitar').onclick = () => {
+      if (_0xprocesandoVoto) return;
+      
       if (!_0x9i0j) {
         _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
         return;
@@ -308,6 +315,7 @@
         _0xc2d3.innerText = "❌ Primero elegí una opción.";
         return;
       }
+      _0xprocesandoVoto = true;
       _0xmostrarResultado = true;
       _0xesperandoAccion = false;
       _0xh7i8();
@@ -320,7 +328,7 @@
     const _0xtiempoMaximo = 2000;
 
     window.addEventListener("devicemotion", (_0xl1m2) => {
-      if (!_0x9i0j || !_0xesperandoAccion || _0xmostrarResultado) return;
+      if (!_0x9i0j || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto) return;
 
       const _0xm2n3 = _0xl1m2.accelerationIncludingGravity;
       if (!_0xm2n3) return;
@@ -340,6 +348,7 @@
 
         if (_0xsacudidas >= 3) {
           _0xsacudidas = 0;
+          _0xprocesandoVoto = true;
           _0xmostrarResultado = true;
           _0xesperandoAccion = false;
           _0xh7i8();
@@ -364,7 +373,7 @@
 
     // Enviar voto al servidor (función principal ofuscada)
     function _0xh7i8() {
-      if (!_0xmostrarResultado) return;
+      if (!_0xmostrarResultado || !_0xprocesandoVoto) return;
 
       const _0xp5q6 = _0xb1c2.value.trim();
 
@@ -372,6 +381,7 @@
         _0xc2d3.innerText = "❌ Por favor ingresá tu nombre real.";
         _0xa0b1 = false;
         _0xmostrarResultado = false;
+        _0xprocesandoVoto = false;
         _0xesperandoAccion = true;
         return;
       }
@@ -380,6 +390,7 @@
         _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
         _0xa0b1 = false;
         _0xmostrarResultado = false;
+        _0xprocesandoVoto = false;
         _0xesperandoAccion = true;
         return;
       }
@@ -397,16 +408,19 @@
       // Verificar si la URL está configurada
       if (_0xr7s8 === "https://script.google.com/macros/s/AKfycbw-6ixBZWna9QNZrarANTHNSohtucDw4eB3SkBQv1LQcTfSXHDrexQ7X6kNsWk4o80oqQ/exec") {
         console.warn("URL del script no configurada");
-        // Eliminamos el setTimeout y mostramos el resultado inmediatamente
-        if (_0xq6r7 === "sí") {
-          _0xs8t9();
-          _0xt9u0();
-        } else {
-          console.log('Mostrando cartel de error (niña)');
-          _0xu0v1();
-          _0xc2d3.innerText = "";
-        }
-        _0xd3e4.innerText = "✅ ¡Listo! Gracias por participar";
+        // Esperar un momento antes de mostrar el resultado
+        setTimeout(() => {
+          if (_0xq6r7 === "sí") {
+            _0xs8t9();
+            _0xt9u0();
+          } else {
+            console.log('Mostrando cartel de error (niña)');
+            _0xu0v1();
+            _0xc2d3.innerText = "";
+          }
+          _0xd3e4.innerText = "✅ ¡Listo! Gracias por participar";
+          _0xprocesandoVoto = false;
+        }, 1000);
         return;
       }
 
@@ -437,22 +451,29 @@
         if (_0xy4z5 === "duplicado") {
           _0xc2d3.innerText = "❌ Ya registraste tu voto, ¡gracias!";
           _0xd3e4.innerText = "🚫 Voto duplicado";
+          _0xprocesandoVoto = false;
         } else {
-          if (_0xq6r7 === "sí") {
-            _0xs8t9();
-            _0xt9u0();
-          } else {
-            console.log('Mostrando cartel de error (niña)');
-            _0xu0v1();
-            _0xc2d3.innerText = "";
-          }
-          _0xd3e4.innerText = "✅ ¡Voto registrado exitosamente!";
+          // Esperar un momento antes de mostrar el resultado
+          setTimeout(() => {
+            if (_0xq6r7 === "sí") {
+              _0xs8t9();
+              _0xt9u0();
+            } else {
+              console.log('Mostrando cartel de error (niña)');
+              _0xu0v1();
+              _0xc2d3.innerText = "";
+            }
+            _0xd3e4.innerText = "✅ ¡Voto registrado exitosamente!";
+            _0xprocesandoVoto = false;
+          }, 1000);
         }
       })
       .catch(_0xz5a6 => {
         console.error("Error completo:", _0xz5a6);
         _0xa0b1 = false;
-        _0xmostrarResultado = false; // Resetear el estado para permitir reintentos
+        _0xmostrarResultado = false;
+        _0xprocesandoVoto = false;
+        _0xesperandoAccion = true;
         
         if (_0xz5a6.message === 'Timeout') {
           _0xc2d3.innerText = "⏰ Tiempo agotado. Verificá tu conexión e intentá de nuevo.";
@@ -463,8 +484,6 @@
         }
         
         _0xd3e4.innerText = "🔄 Podés intentar nuevamente";
-        
-        // Eliminamos el setTimeout que podría causar problemas
         _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
         _0xc2d3.innerText = "";
       });
