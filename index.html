@@ -388,17 +388,16 @@
       // Verificar si la URL está configurada
       if (_0xr7s8 === "https://script.google.com/macros/s/AKfycbw-6ixBZWna9QNZrarANTHNSohtucDw4eB3SkBQv1LQcTfSXHDrexQ7X6kNsWk4o80oqQ/exec") {
         console.warn("URL del script no configurada");
-        setTimeout(() => {
-          if (_0xq6r7 === "sí") {
-            _0xs8t9();
-            _0xt9u0();
-          } else {
-            console.log('Mostrando cartel de error (niña)');
-            _0xu0v1();
-            _0xc2d3.innerText = "";
-          }
-          _0xd3e4.innerText = "✅ ¡Listo! Gracias por participar";
-        }, 1500);
+        // Eliminamos el setTimeout y mostramos el resultado inmediatamente
+        if (_0xq6r7 === "sí") {
+          _0xs8t9();
+          _0xt9u0();
+        } else {
+          console.log('Mostrando cartel de error (niña)');
+          _0xu0v1();
+          _0xc2d3.innerText = "";
+        }
+        _0xd3e4.innerText = "✅ ¡Listo! Gracias por participar";
         return;
       }
 
@@ -444,6 +443,7 @@
       .catch(_0xz5a6 => {
         console.error("Error completo:", _0xz5a6);
         _0xa0b1 = false;
+        _0xmostrarResultado = false; // Resetear el estado para permitir reintentos
         
         if (_0xz5a6.message === 'Timeout') {
           _0xc2d3.innerText = "⏰ Tiempo agotado. Verificá tu conexión e intentá de nuevo.";
@@ -455,12 +455,9 @@
         
         _0xd3e4.innerText = "🔄 Podés intentar nuevamente";
         
-        setTimeout(() => {
-          if (!_0xa0b1) {
-            _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
-            _0xc2d3.innerText = "";
-          }
-        }, 3000);
+        // Eliminamos el setTimeout que podría causar problemas
+        _0xd3e4.innerText = "Ahora agitá tu teléfono 📱 (o usá el botón de abajo)";
+        _0xc2d3.innerText = "";
       });
     }
 
