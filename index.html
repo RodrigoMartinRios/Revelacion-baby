@@ -271,55 +271,17 @@
     // Variables ofuscadas
     let _0x9i0j = null;
     let _0xa0b1 = false;
+    let _0xmostrarResultado = false;
     const _0xb1c2 = document.getElementById('nombre');
     const _0xc2d3 = document.getElementById('result');
     const _0xd3e4 = document.getElementById('instruccion');
 
     const _0xe4f5 = "niño"; // ✅ Cambiar aquí si el resultado es niña
 
-    // Detectar sacudida (optimizado)
-    let _0xk0l1 = new Date().getTime();
-    let _0xsacudidas = 0;
-    const _0xumbralSacudida = 8; // Umbral más bajo para mayor sensibilidad
-    const _0xtiempoMaximo = 2000; // 2 segundos para contar sacudidas
-
-    window.addEventListener("devicemotion", (_0xl1m2) => {
-      if (!_0x9i0j || _0xa0b1) return;
-
-      const _0xm2n3 = _0xl1m2.accelerationIncludingGravity;
-      if (!_0xm2n3) return; // Verificar si el dispositivo soporta aceleración
-
-      const _0xn3o4 = Math.abs(_0xm2n3.x) + Math.abs(_0xm2n3.y) + Math.abs(_0xm2n3.z);
-      const _0xo4p5 = new Date().getTime();
-
-      // Actualizar el contador de sacudidas
-      if (_0xn3o4 > _0xumbralSacudida && _0xo4p5 - _0xk0l1 > 300) {
-        _0xsacudidas++;
-        _0xk0l1 = _0xo4p5;
-        
-        // Actualizar mensaje de instrucción
-        if (_0xsacudidas === 1) {
-          _0xd3e4.innerText = "¡Bien! Agitá un poco más fuerte 📱";
-        } else if (_0xsacudidas === 2) {
-          _0xd3e4.innerText = "¡Un poco más! 💪";
-        }
-
-        // Verificar si se alcanzó el número de sacudidas necesarias
-        if (_0xsacudidas >= 3) {
-          _0xsacudidas = 0;
-          _0xh7i8();
-        }
-      }
-
-      // Reiniciar contador si pasa demasiado tiempo
-      if (_0xo4p5 - _0xk0l1 > _0xtiempoMaximo) {
-        _0xsacudidas = 0;
-      }
-    });
-
-    // Mensaje inicial más claro
+    // Botones de selección (ofuscados)
     document.getElementById('btnNino').onclick = () => {
       _0x9i0j = "niño";
+      _0xmostrarResultado = false;
       _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
@@ -327,6 +289,7 @@
 
     document.getElementById('btnNina').onclick = () => {
       _0x9i0j = "niña";
+      _0xmostrarResultado = false;
       _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
@@ -334,13 +297,52 @@
 
     // Botón para ver resultado
     document.getElementById('btnAgitar').onclick = () => {
-      // Siempre intentar mostrar el resultado si hay opción seleccionada
-      if (_0x9i0j) {
-        _0xh7i8();
-      } else {
+      if (!_0x9i0j) {
         _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
+        return;
+      }
+      if (!_0xmostrarResultado) {
+        _0xmostrarResultado = true;
+        _0xh7i8();
       }
     };
+
+    // Detectar sacudida (optimizado)
+    let _0xk0l1 = new Date().getTime();
+    let _0xsacudidas = 0;
+    const _0xumbralSacudida = 8;
+    const _0xtiempoMaximo = 2000;
+
+    window.addEventListener("devicemotion", (_0xl1m2) => {
+      if (!_0x9i0j || _0xa0b1 || _0xmostrarResultado) return;
+
+      const _0xm2n3 = _0xl1m2.accelerationIncludingGravity;
+      if (!_0xm2n3) return;
+
+      const _0xn3o4 = Math.abs(_0xm2n3.x) + Math.abs(_0xm2n3.y) + Math.abs(_0xm2n3.z);
+      const _0xo4p5 = new Date().getTime();
+
+      if (_0xn3o4 > _0xumbralSacudida && _0xo4p5 - _0xk0l1 > 300) {
+        _0xsacudidas++;
+        _0xk0l1 = _0xo4p5;
+        
+        if (_0xsacudidas === 1) {
+          _0xd3e4.innerText = "¡Bien! Agitá un poco más fuerte 📱";
+        } else if (_0xsacudidas === 2) {
+          _0xd3e4.innerText = "¡Un poco más! 💪";
+        }
+
+        if (_0xsacudidas >= 3) {
+          _0xsacudidas = 0;
+          _0xmostrarResultado = true;
+          _0xh7i8();
+        }
+      }
+
+      if (_0xo4p5 - _0xk0l1 > _0xtiempoMaximo) {
+        _0xsacudidas = 0;
+      }
+    });
 
     // Marcar botón activo (función ofuscada)
     function _0xf5g6(_0xi8j9, _0xj9k0) {
@@ -355,17 +357,21 @@
 
     // Enviar voto al servidor (función principal ofuscada)
     function _0xh7i8() {
+      if (!_0xmostrarResultado) return;
+
       const _0xp5q6 = _0xb1c2.value.trim();
 
       if (!_0xp5q6) {
         _0xc2d3.innerText = "❌ Por favor ingresá tu nombre real.";
         _0xa0b1 = false;
+        _0xmostrarResultado = false;
         return;
       }
 
       if (!_0x9i0j) {
         _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
         _0xa0b1 = false;
+        _0xmostrarResultado = false;
         return;
       }
 
