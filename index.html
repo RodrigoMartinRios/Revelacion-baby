@@ -299,7 +299,8 @@
     let _0xesperandoAccion = false;
     let _0xprocesandoVoto = false;
     let _0xopcionSeleccionada = false;
-    let _0xaccionUsuario = false; // Nueva variable para controlar si el usuario realizó una acción
+    let _0xaccionUsuario = false;
+    let _0xmostrarMensajeAgitar = false; // Nueva variable para controlar el mensaje
     const _0xb1c2 = document.getElementById('nombre');
     const _0xc2d3 = document.getElementById('result');
     const _0xd3e4 = document.getElementById('instruccion');
@@ -313,6 +314,15 @@
       _0xprocesandoVoto = false;
       _0xopcionSeleccionada = false;
       _0xaccionUsuario = false;
+      _0xmostrarMensajeAgitar = false;
+      _0xc2d3.innerText = "";
+    }
+
+    // Función para mostrar mensaje de agitar
+    function _0xmostrarMensaje() {
+      if (!_0xmostrarMensajeAgitar) return;
+      _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
+      _0xd3e4.style.display = "block";
     }
 
     // Botones de selección (ofuscados)
@@ -322,7 +332,8 @@
       _0x9i0j = "niño";
       _0xopcionSeleccionada = true;
       _0xesperandoAccion = true;
-      _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
+      _0xmostrarMensajeAgitar = true;
+      _0xmostrarMensaje();
       _0xf5g6("btnNino", "btnNina");
       _0xg6h7();
     };
@@ -333,7 +344,8 @@
       _0x9i0j = "niña";
       _0xopcionSeleccionada = true;
       _0xesperandoAccion = true;
-      _0xd3e4.innerText = "¡Agitá tu teléfono 3 veces para ver el resultado! 📱";
+      _0xmostrarMensajeAgitar = true;
+      _0xmostrarMensaje();
       _0xf5g6("btnNina", "btnNino");
       _0xg6h7();
     };
@@ -354,6 +366,8 @@
       _0xprocesandoVoto = true;
       _0xmostrarResultado = true;
       _0xesperandoAccion = false;
+      _0xmostrarMensajeAgitar = false;
+      _0xd3e4.innerText = "⏳ Procesando tu voto...";
       _0xh7i8();
     };
 
@@ -366,7 +380,7 @@
 
     window.addEventListener("devicemotion", (_0xl1m2) => {
       // Verificar si debemos procesar el evento
-      if (!_0x9i0j || !_0xopcionSeleccionada || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto || _0xaccionUsuario) {
+      if (!_0x9i0j || !_0xopcionSeleccionada || !_0xesperandoAccion || _0xmostrarResultado || _0xprocesandoVoto || _0xaccionUsuario || !_0xmostrarMensajeAgitar) {
         return;
       }
 
@@ -395,6 +409,8 @@
           _0xprocesandoVoto = true;
           _0xmostrarResultado = true;
           _0xesperandoAccion = false;
+          _0xmostrarMensajeAgitar = false;
+          _0xd3e4.innerText = "⏳ Procesando tu voto...";
           _0xh7i8();
         }
       }
@@ -403,6 +419,9 @@
       if (_0xo4p5 - _0xk0l1 > _0xtiempoMaximo) {
         _0xsacudidas = 0;
         _0xk0l1 = _0xo4p5;
+        if (_0xmostrarMensajeAgitar) {
+          _0xmostrarMensaje();
+        }
       }
     });
 
@@ -436,6 +455,8 @@
         _0xc2d3.innerText = "❌ Por favor ingresá tu nombre real.";
         _0xresetearEstados();
         _0xesperandoAccion = true;
+        _0xmostrarMensajeAgitar = true;
+        _0xmostrarMensaje();
         return;
       }
 
@@ -443,6 +464,8 @@
         _0xc2d3.innerText = "❌ Por favor elegí una opción primero.";
         _0xresetearEstados();
         _0xesperandoAccion = true;
+        _0xmostrarMensajeAgitar = true;
+        _0xmostrarMensaje();
         return;
       }
 
@@ -455,7 +478,8 @@
         opcionSeleccionada: _0x9i0j,
         respuestaCorrecta: _0xe4f5,
         acierto: _0xq6r7,
-        accionUsuario: _0xaccionUsuario
+        accionUsuario: _0xaccionUsuario,
+        mostrarMensajeAgitar: _0xmostrarMensajeAgitar
       });
 
       // 🔽 PEGÁ AQUÍ TU URL DEL SCRIPT DE GOOGLE APPS ENTRE COMILLAS
