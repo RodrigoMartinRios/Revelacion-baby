@@ -389,9 +389,10 @@
     // Detectar sacudida (optimizado)
     let _0xk0l1 = new Date().getTime();
     let _0xsacudidas = 0;
-    const _0xumbralSacudida = 8;
+    const _0xumbralSacudida = 15; // Aumentar umbral para ser más estricto
     const _0xtiempoMaximo = 2000;
     let _0xultimaSacudida = 0;
+    let _0xprimerMovimiento = true; // Nueva variable para ignorar el primer movimiento
 
     window.addEventListener("devicemotion", (_0xl1m2) => {
       // Verificar si debemos procesar el evento
@@ -402,11 +403,17 @@
       const _0xm2n3 = _0xl1m2.accelerationIncludingGravity;
       if (!_0xm2n3) return;
 
+      // Ignorar el primer movimiento para evitar activación automática
+      if (_0xprimerMovimiento) {
+        _0xprimerMovimiento = false;
+        return;
+      }
+
       const _0xn3o4 = Math.abs(_0xm2n3.x) + Math.abs(_0xm2n3.y) + Math.abs(_0xm2n3.z);
       const _0xo4p5 = new Date().getTime();
 
       // Verificar si ha pasado suficiente tiempo desde la última sacudida
-      if (_0xo4p5 - _0xultimaSacudida < 300) return;
+      if (_0xo4p5 - _0xultimaSacudida < 500) return; // Aumentar tiempo mínimo
 
       if (_0xn3o4 > _0xumbralSacudida) {
         _0xultimaSacudida = _0xo4p5;
@@ -420,6 +427,7 @@
 
         if (_0xsacudidas >= 3) {
           _0xsacudidas = 0;
+          _0xprimerMovimiento = true; // Resetear para próxima vez
           _0xaccionUsuario = true;
           _0xprocesandoVoto = true;
           _0xmostrarResultado = true;
@@ -454,7 +462,7 @@
 
     // Enviar voto al servidor (función principal ofuscada)
     function _0xh7i8() {
-      // Verificar todas las condiciones necesarias
+      // Verificar todas las condiciones necesarias MÁS ESTRICTAMENTE
       if (!_0xmostrarResultado || !_0xprocesandoVoto || !_0xopcionSeleccionada || !_0xaccionUsuario || _0xbloquearResultado) {
         console.log('Condiciones no cumplidas:', {
           mostrarResultado: _0xmostrarResultado,
@@ -463,6 +471,12 @@
           accionUsuario: _0xaccionUsuario,
           bloquearResultado: _0xbloquearResultado
         });
+        return;
+      }
+
+      // Verificación adicional: debe haber esperado al menos 1 segundo desde la selección
+      if (!_0xesperandoAccion && !_0xprocesandoVoto) {
+        console.log('No se esperó suficiente tiempo desde la selección');
         return;
       }
 
@@ -508,9 +522,12 @@
       // Verificar si la URL está configurada
       if (_0xr7s8 === "https://script.google.com/macros/s/AKfycbw-6ixBZWna9QNZrarANTHNSohtucDw4eB3SkBQv1LQcTfSXHDrexQ7X6kNsWk4o80oqQ/exec") {
         console.warn("URL del script no configurada");
-        // Esperar un momento antes de mostrar el resultado
+        // VERIFICACIÓN ADICIONAL: Solo mostrar resultado si realmente fue acción del usuario
         setTimeout(() => {
-          if (!_0xaccionUsuario || _0xbloquearResultado) return; // Verificar nuevamente que fue una acción del usuario
+          if (!_0xaccionUsuario || _0xbloquearResultado || !_0xprocesandoVoto) {
+            console.log('Acción cancelada - no fue iniciada por el usuario');
+            return;
+          }
           if (_0xq6r7 === "sí") {
             _0xs8t9();
             _0xt9u0();
